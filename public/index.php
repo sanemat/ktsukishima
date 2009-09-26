@@ -17,14 +17,45 @@ function configure()
 # Setting code that will be executed before each controller function
 function before()
 {
+  require_once 'Net/UserAgent/Mobile.php';
+  option( 'agent', Net_UserAgent_Mobile::factory() );
+  
+  $encoding = option('encoding');
+  $content_type = "application/xhtml+xml; charset={$encoding}";
+  if(option('agent')->isDoCoMo()){
+    $encoding = 'Shift_JIS';
+    $content_type = "application/xhtml+xml; charset={$encoding}";
+  }
+  elseif(option('agent')->isSoftBank()){
+    $encoding = 'UTF-8';
+    $content_type = "text/html; charset={$encoding}";
+  }
+  elseif(option('agent')->isEZweb()){
+    $encoding = 'Shift_JIS';
+    $content_type = "text/html; charset={$encoding}";
+  }
+  set('encoding', $encoding);
+  set('content_type', $content_type);
   layout( 'layout.default.html.php' );
+
 }
 
 # Setting code that will be executed after each controller function
 function after($output)
 {
-  require_once 'Net/UserAgent/Mobile.php';
-  $agent = Net_UserAgent_Mobile::factory();
+  
+  if( option('agent')->isDoCoMo() ){
+    $output = mb_convert_encoding( $output, 'SJIS-WIN', 'UTF-8');
+    if( !headers_sent() ) header( 'Content-Type: application/xhtml+xml; charset=Shift_JIS' );
+  }
+  elseif( option('agent')->isSoftBank() ){
+    if( !headers_sent() ) header( 'Content-Type: text/html; charset=UTF-8' );
+  }
+  elseif( option('agent')->isEZweb() ){
+    $output = mb_convert_encoding( $output, 'SJIS-WIN', 'UTF-8');
+    if( !headers_sent() ) header( 'Content-Type: text/html; charset=Shift_JIS' );
+  }
+
   return $output;
 }
 
