@@ -49,17 +49,28 @@ function before()
 # Setting code that will be executed after each controller function
 function after($output)
 {
+  require_once 'Text/Pictogram/Mobile.php';
   
   if( option('agent')->isDoCoMo() ){
     $output = mb_convert_encoding( $output, 'SJIS-WIN', 'UTF-8');
+    $emoji = Text_Pictogram_Mobile::factory('docomo', 'sjis');
+    $output = $emoji->replace( $output );
     if( !headers_sent() ) header( 'Content-Type: application/xhtml+xml; charset=Shift_JIS' );
   }
   elseif( option('agent')->isSoftBank() ){
+    $emoji = Text_Pictogram_Mobile::factory('softbank', 'utf-8');
+    $output = $emoji->replace( $output );
     if( !headers_sent() ) header( 'Content-Type: text/html; charset=UTF-8' );
   }
   elseif( option('agent')->isEZweb() ){
     $output = mb_convert_encoding( $output, 'SJIS-WIN', 'UTF-8');
+    $emoji = Text_Pictogram_Mobile::factory('au', 'sjis');
+    $output = $emoji->replace( $output );
     if( !headers_sent() ) header( 'Content-Type: text/html; charset=Shift_JIS' );
+  }
+  else{
+    $emoji = Text_Pictogram_Mobile::factory( null, 'utf-8');
+    $output = $emoji->replace( $output );
   }
 
   return $output;
