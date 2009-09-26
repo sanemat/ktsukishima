@@ -23,6 +23,8 @@ function before()
 # Setting code that will be executed after each controller function
 function after($output)
 {
+  require_once 'Net/UserAgent/Mobile.php';
+  $agent = Net_UserAgent_Mobile::factory();
   return $output;
 }
 
