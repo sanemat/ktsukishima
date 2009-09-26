@@ -9,7 +9,7 @@ function configure()
 #  option( 'public_dir', option('root_dir').'/public/');
   option( 'views_dir', option('root_dir').'/views/');
 #  option( 'controllers_dir', option('root_dir').'/controllers/');
-#  option( 'lib_dir', option('root_dir').'/lib/');
+  option( 'lib_dir', option('root_dir').'/lib/');
 
 }
 
@@ -17,6 +17,12 @@ function configure()
 function before()
 {
   layout( 'layout.default.html.php' );
+}
+
+# Setting code that will be executed after each controller function
+function after($output)
+{
+  return $output;
 }
 
 # Defining routes and controllers
