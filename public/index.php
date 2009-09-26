@@ -10,6 +10,7 @@ function configure()
   option( 'views_dir', option('root_dir').'/views/');
 #  option( 'controllers_dir', option('root_dir').'/controllers/');
   option( 'lib_dir', option('root_dir').'/lib/');
+  set_include_path(option('lib_dir') . PATH_SEPARATOR . get_include_path());
 
 }
 
