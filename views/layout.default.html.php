@@ -5,14 +5,14 @@
 
 <head>
   <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
-  <meta name="keywords" content="(キーワード)" />
-  <meta name="description" content="(ページ説明)" />
+  <meta name="keywords" content="<?= empty($keywords) ? 'limonade, php microframework' : h($keywords);?>" />
+  <meta name="description" content="<?= empty($description) ? 'limonade is php microframework inspired by sinatra.' : h($description); ?>" />
   <meta name="robots" content="index,follow" />
-  <title>(タイトル)</title>
+  <title><?= empty($title) ? 'limonade sample' : h($title); ?></title>
 </head>
 
 <body>
-    (本文)
+  <?= $content; ?>
 </body>
 </html>
 
