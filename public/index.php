@@ -39,8 +39,7 @@ function before()
 
   require_once 'Text/Pictogram/Mobile.php';
   $picObject = Text_Pictogram_Mobile::factory('docomo', 'utf-8');
-  $emoji = $picObject->getFormattedPictogramsArray();
-  set('emoji', $emoji);
+  set( 'emoji', $picObject->getFormattedPictogramsArray() );
 
   layout( 'layout.default.html.php' );
 
