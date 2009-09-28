@@ -20,23 +20,6 @@ function before()
   require_once 'Net/UserAgent/Mobile.php';
   option( 'agent', Net_UserAgent_Mobile::factory() );
   
-  $encoding = option( 'encoding' );
-  $content_type = "application/xhtml+xml; charset={$encoding}";
-  if( option( 'agent' )->isDoCoMo() ){
-    $encoding = 'Shift_JIS';
-    $content_type = "application/xhtml+xml; charset={$encoding}";
-  }
-  elseif( option( 'agent' )->isSoftBank() ){
-    $encoding = 'UTF-8';
-    $content_type = "text/html; charset={$encoding}";
-  }
-  elseif( option( 'agent' )->isEZweb() ){
-    $encoding = 'Shift_JIS';
-    $content_type = "text/html; charset={$encoding}";
-  }
-  set( 'encoding', $encoding );
-  set( 'content_type', $content_type );
-
   require_once 'Text/Pictogram/Mobile.php';
   $picObject = Text_Pictogram_Mobile::factory( 'docomo', 'utf-8' );
   set( 'emoji', $picObject->getFormattedPictogramsArray() );
@@ -48,30 +31,84 @@ function before()
 # Setting code that will be executed after each controller function
 function after( $output )
 {
-  require_once 'Text/Pictogram/Mobile.php';
   
   if( option( 'agent' )->isDoCoMo() ){
-    $output = mb_convert_encoding( $output, 'SJIS-WIN', 'UTF-8');
-    $emoji = Text_Pictogram_Mobile::factory( 'docomo', 'sjis' );
-    $output = $emoji->replace( $output );
-    if( !headers_sent() ) header( 'Content-Type: application/xhtml+xml; charset=Shift_JIS' );
+    $output = after_render_docomo( $output );
   }
   elseif( option( 'agent' )->isSoftBank() ){
-    $emoji = Text_Pictogram_Mobile::factory( 'softbank', 'utf-8' );
-    $output = $emoji->replace( $output );
-    if( !headers_sent() ) header( 'Content-Type: text/html; charset=UTF-8' );
+    $output = after_render_softbank( $output );
   }
   elseif( option( 'agent' )->isEZweb() ){
-    $output = mb_convert_encoding( $output, 'SJIS-WIN', 'UTF-8' );
-    $emoji = Text_Pictogram_Mobile::factory( 'au', 'sjis' );
-    $output = $emoji->replace( $output );
-    if( !headers_sent() ) header( 'Content-Type: text/html; charset=Shift_JIS' );
+    $output = after_render_au( $output );
   }
   else{
-    $emoji = Text_Pictogram_Mobile::factory( null, 'utf-8' );
-    $output = $emoji->replace( $output );
+    $output = after_render_pc( $output );
   }
 
+  return $output;
+}
+
+function after_render_docomo($output)
+{
+  require_once 'Text/Pictogram/Mobile.php';
+  $content_type = 'application/xhtml+xml; charset=Shift_JIS';
+
+  $output = str_replace( '%%%encoding%%%', 'Shift_JIS', $output );
+  $output = str_replace( '%%%content_type%%%', $content_type, $output );
+
+  $output = mb_convert_encoding( $output, 'SJIS-WIN', 'UTF-8' );
+
+  $emoji = Text_Pictogram_Mobile::factory( 'docomo', 'sjis' );
+  $output = $emoji->replace( $output );
+  
+  if( !headers_sent() ) header( "Content-Type: {$content_type}" );
+  return $output;
+}
+
+function after_render_softbank($output)
+{
+  require_once 'Text/Pictogram/Mobile.php';
+  $content_type = 'text/html; charset=UTF-8';
+  
+  $output = str_replace( '%%%encoding%%%', 'UTF-8', $output );
+  $output = str_replace( '%%%content_type%%%', $content_type, $output);
+
+  $emoji = Text_Pictogram_Mobile::factory( 'softbank', 'utf-8' );
+  $output = $emoji->replace( $output );
+  
+  if( !headers_sent() ) header( "Content-Type: {$content_type}" );
+  return $output;
+}
+
+function after_render_au($output)
+{
+  require_once 'Text/Pictogram/Mobile.php';
+  $content_type = 'text/html; charset=Shift_JIS';
+  
+  $output = str_replace( '%%%encoding%%%', 'Shift_JIS', $output );
+  $output = str_replace( '%%%content_type%%%', $content_type, $output);
+  
+  $output = mb_convert_encoding( $output, 'SJIS-WIN', 'UTF-8' );
+  
+  $emoji = Text_Pictogram_Mobile::factory( 'au', 'sjis' );
+  $output = $emoji->replace( $output );
+  
+  if( !headers_sent() ) header( "Content-Type: {$content_type}" );
+  return $output;
+}
+
+function after_render_pc($output)
+{
+  require_once 'Text/Pictogram/Mobile.php';
+  $content_type = 'text/html; charset=UTF-8';
+  
+  $output = str_replace( '%%%encoding%%%', 'UTF-8', $output );
+  $output = str_replace( '%%%content_type%%%', $content_type, $output);
+  
+  $emoji = Text_Pictogram_Mobile::factory( null, 'utf-8' );
+  $output = $emoji->replace( $output );
+  
+  if( !headers_sent() ) header( "Content-Type: {$content_type}" );
   return $output;
 }
 
