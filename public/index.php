@@ -9,6 +9,7 @@ function configure()
   option( 'views_dir', option( 'root_dir' ).'/views/' );
   option( 'lib_dir', option( 'root_dir' ).'/lib/' );
   option( 'vendor_dir', option( 'root_dir' ).'/vendor/' );
+  option( 'public_dir', option( 'root_dir' ).'/public/' );
   set_include_path( option( 'vendor_dir' ) . PATH_SEPARATOR . get_include_path() );
 
 }
