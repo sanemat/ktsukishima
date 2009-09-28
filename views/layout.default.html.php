@@ -9,6 +9,7 @@
   <meta name="description" content="<?= empty($description) ? 'limonade is php microframework inspired by sinatra.' : h($description); ?>" />
   <meta name="robots" content="index,follow" />
   <title><?= empty($title) ? 'limonade sample' : h($title); ?></title>
+  <link rel="stylesheet" href="sample.css" />
 </head>
 
 <body>
