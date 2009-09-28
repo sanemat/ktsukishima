@@ -8,7 +8,8 @@ function configure()
   option( 'root_dir', dirname( __FILE__ ) . '/..' );
   option( 'views_dir', option( 'root_dir' ).'/views/' );
   option( 'lib_dir', option( 'root_dir' ).'/lib/' );
-  set_include_path( option( 'lib_dir' ) . PATH_SEPARATOR . get_include_path() );
+  option( 'vendor_dir', option( 'root_dir' ).'/vendor/' );
+  set_include_path( option( 'vendor_dir' ) . PATH_SEPARATOR . get_include_path() );
 
 }
 
