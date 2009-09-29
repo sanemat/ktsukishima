@@ -55,9 +55,17 @@ function after_render_docomo($output)
 
   $output = str_replace( '%%%encoding%%%', 'Shift_JIS', $output );
   $output = str_replace( '%%%content_type%%%', $content_type, $output );
+  
 
   $output = mb_convert_encoding( $output, 'SJIS-WIN', 'UTF-8' );
 
+  require_once 'HTML/CSS/Mobile.php';
+  try {
+      $parser = HTML_CSS_Mobile::getInstance();
+      $output = $parser->apply($output);
+  } catch (Exception $e) {
+      halt( HTTP_FORBIDDEN, "An error occured while dispatch page " . h( $e ) );
+  }
   $emoji = Text_Pictogram_Mobile::factory( 'docomo', 'sjis' );
   $output = $emoji->replace( $output );
   
