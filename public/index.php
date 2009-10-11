@@ -122,10 +122,10 @@ function after_render_pc($output)
 
 # Defining routes and controllers
 # matches GET /
-dispatch( '/', 'hello' );
-  function hello()
+dispatch( '/', 'top_page' );
+  function top_page()
   {
-    return 'Hello limonade!';
+    return render( 'top_page.html.php' );
   }
 
 # matches GET /page
