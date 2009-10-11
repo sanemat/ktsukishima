@@ -140,7 +140,7 @@ dispatch( '/:page', 'question_page' );
     elseif(!file_exists( file_path( option('views_dir'), $file_name ) ) ){
       halt( HTTP_NOT_FOUND, "An error occured while dispatch page " . h( $file_name ) );
     }
-
+    set( 'title', $page_name );
     return render( $file_name );
   }
 
