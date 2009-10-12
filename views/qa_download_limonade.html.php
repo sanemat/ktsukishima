@@ -20,18 +20,18 @@ branchの0.4にpush<br />
 </p>
 <p>
 たとえば: home下のlimonadeディレクトリに展開する
-<code>
 <pre>
+<code>
 $ cd ~
 $ git clone git://github.com/sofadesign/limonade.git limonade
 $ cd limonade/
 $ git checkout origin/0.4
-</pre>
 </code>
+</pre>
 </p>
 <h2>ファイル構成</h2>
-<code>
 <pre>
+<code>
 $ tree .
 .
 |-- AUTHORS
@@ -91,8 +91,8 @@ $ tree .
     `-- tests.php
 
 16 directories, 39 files
-</pre>
 </code>
+</pre>
 <h2>動作確認</h2>
 <p>
 webサーバからアクセスできるようにする
@@ -109,8 +109,9 @@ example 01 Hello World!をクリック(http://limonade.localhost/examples/exampl
 <h2>ドキュメントルートの上に移動</h2>
 <p>
 必要なファイルはLICENSE, AUTHORS, lib/limonade.php だけなので、こんな感じに整理した。
-<code>
+</p>
 <pre>
+<code>
 |-- lib
 |   |-- AUTHORS-limonade
 |   |-- LICENSE-limonade
@@ -121,16 +122,18 @@ example 01 Hello World!をクリック(http://limonade.localhost/examples/exampl
 |-- vendor
 `-- views
     `-- top_page.html.php
-</pre>
 </code>
+</pre>
+<p>
 ディレクトリ構成<br />
 libにlimonade、publicを公開環境に、viewsにテンプレートを入れて、vendorにPEARなど別ライブラリを入れる想定<br />
 AUTHORSをAUTHORS-limonadeに、LICENSEをLICENSE-limonadeにそれぞれリネーム。<br />
 </p>
 <p>
 $ view public/index.php
-<code>
+</p>
 <pre>
+<code>
 &lt;?php
 # Loading limonade framework
 require_once dirname( __FILE__ ) . '/../lib/limonade.php';
@@ -154,11 +157,11 @@ dispatch('/', 'hello_world');
   }
 
 run();
-</pre>
 </code>
-
+</pre>
+<p>
 こんなかんじで<br />
-hello world!
+Hello world!
 </p>
 <p>
 <a href="<?=url_for('/');?>">how_to_start_limonadeに戻る</a>
