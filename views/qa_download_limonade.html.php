@@ -108,13 +108,27 @@ example 01 Hello World!をクリック(http://limonade.localhost/examples/exampl
 </p>
 <h2><a name="move-and-set" id="move-and-set">ドキュメントルートの上に移動</a></h2>
 <p>
-必要なファイルはLICENSE, AUTHORS, lib/limonade.php だけなので、こんな感じに整理した。
+必要なファイルはLICENSE, AUTHORS, lib/limonade.php, lib/limonade/* だけなので、こんな感じに整理した。
 </p>
 <pre>
 <code>
 |-- lib
 |   |-- AUTHORS-limonade
 |   |-- LICENSE-limonade
+|   |-- limonade
+|   |   |-- abstract.php
+|   |   |-- assertions.php
+|   |   |-- public
+|   |   |   |-- css
+|   |   |   |   `-- screen.css
+|   |   |   `-- img
+|   |   |       `-- bg_header.png
+|   |   |-- tests.php
+|   |   `-- views
+|   |       |-- _debug.html.php
+|   |       |-- _notices.html.php
+|   |       |-- default_layout.php
+|   |       `-- error.html.php
 |   `-- limonade.php
 |-- public
 |   |-- index.php
