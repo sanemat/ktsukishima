@@ -106,3 +106,60 @@ example 01 Hello World!をクリック(http://limonade.localhost/examples/exampl
 ?/hello/sanematとパラメータを渡すと(http://limonade.localhost/examples/example01/?/hello/sanemat)<br />
 →Limonde first example Hello sanemat!<br />
 </p>
+<h2>ドキュメントルートの上に移動</h2>
+<p>
+必要なファイルはLICENSE, AUTHORS, lib/limonade.php だけなので、こんな感じに整理した。
+<code>
+<pre>
+|-- lib
+|   |-- AUTHORS-limonade
+|   |-- LICENSE-limonade
+|   `-- limonade.php
+|-- public
+|   |-- index.php
+|   `-- sample.css
+|-- vendor
+`-- views
+    `-- top_page.html.php
+</pre>
+</code>
+ディレクトリ構成<br />
+libにlimonade、publicを公開環境に、viewsにテンプレートを入れて、vendorにPEARなど別ライブラリを入れる想定<br />
+AUTHORSをAUTHORS-limonadeに、LICENSEをLICENSE-limonadeにそれぞれリネーム。<br />
+</p>
+<p>
+$ view public/index.php
+<code>
+<pre>
+&lt;?php
+# Loading limonade framework
+require_once dirname( __FILE__ ) . '/../lib/limonade.php';
+
+# Setting global options of our application
+function configure()
+{
+  option( 'root_dir', dirname( __FILE__ ) . '/..' );
+  option( 'views_dir', option( 'root_dir' ).'/views/' );
+  option( 'lib_dir', option( 'root_dir' ).'/lib/' );
+  option( 'vendor_dir', option( 'root_dir' ).'/vendor/' );
+  option( 'public_dir', option( 'root_dir' ).'/public/' );
+  set_include_path( option( 'vendor_dir' ) . PATH_SEPARATOR . get_include_path() );
+
+}
+
+dispatch('/', 'hello_world');
+  function hello_world()
+  {
+    return "Hello world!";
+  }
+
+run();
+</pre>
+</code>
+
+こんなかんじで<br />
+hello world!
+</p>
+<p>
+<a href="<?=url_for('/');?>">how_to_start_limonadeに戻る</a>
+</p>
