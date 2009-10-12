@@ -10,6 +10,7 @@ function configure()
   option( 'lib_dir', option( 'root_dir' ).'/lib/' );
   option( 'vendor_dir', option( 'root_dir' ).'/vendor/' );
   option( 'public_dir', option( 'root_dir' ).'/public/' );
+  option( 'limonade_public_dir', option( 'public_dir') );
   set_include_path( option( 'vendor_dir' ) . PATH_SEPARATOR . get_include_path() );
 
 }
@@ -44,7 +45,7 @@ function after( $output )
   else{
     $output = after_render_pc( $output );
   }
-
+  
   return $output;
 }
 
