@@ -55,7 +55,8 @@ function after_render_docomo($output)
 
   $output = str_replace( '%%%encoding%%%', 'Shift_JIS', $output );
   $output = str_replace( '%%%content_type%%%', $content_type, $output );
-  
+  option('encoding', 'Shift_JIS');
+  option('content_type', 'application/xhtml+xml');
 
   $output = mb_convert_encoding( $output, 'SJIS-WIN', 'UTF-8' );
 
@@ -69,7 +70,6 @@ function after_render_docomo($output)
   $emoji = Text_Pictogram_Mobile::factory( 'docomo', 'sjis' );
   $output = $emoji->replace( $output );
   
-  if( !headers_sent() ) header( "Content-Type: {$content_type}" );
   return $output;
 }
 
@@ -81,10 +81,11 @@ function after_render_softbank($output)
   $output = str_replace( '%%%encoding%%%', 'UTF-8', $output );
   $output = str_replace( '%%%content_type%%%', $content_type, $output);
 
+  option('encoding', 'UTF-8');
+
   $emoji = Text_Pictogram_Mobile::factory( 'softbank', 'utf-8' );
   $output = $emoji->replace( $output );
   
-  if( !headers_sent() ) header( "Content-Type: {$content_type}" );
   return $output;
 }
 
@@ -96,12 +97,12 @@ function after_render_au($output)
   $output = str_replace( '%%%encoding%%%', 'Shift_JIS', $output );
   $output = str_replace( '%%%content_type%%%', $content_type, $output);
   
+  option('encoding', 'Shift_JIS');
   $output = mb_convert_encoding( $output, 'SJIS-WIN', 'UTF-8' );
   
   $emoji = Text_Pictogram_Mobile::factory( 'au', 'sjis' );
   $output = $emoji->replace( $output );
   
-  if( !headers_sent() ) header( "Content-Type: {$content_type}" );
   return $output;
 }
 
@@ -113,10 +114,10 @@ function after_render_pc($output)
   $output = str_replace( '%%%encoding%%%', 'UTF-8', $output );
   $output = str_replace( '%%%content_type%%%', $content_type, $output);
   
+  option('encoding', 'UTF-8');
   $emoji = Text_Pictogram_Mobile::factory( null, 'utf-8' );
   $output = $emoji->replace( $output );
   
-  if( !headers_sent() ) header( "Content-Type: {$content_type}" );
   return $output;
 }
 
