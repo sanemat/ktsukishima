@@ -2,13 +2,13 @@
 <h1>limonadeダウンロードからhello world</h1>
 
 <ul>
-<li>limonadeをダウンロードする</li>
-<li>動作確認</li>
-<li>ファイル構成</li>
-<li>ドキュメントルートの上に移動</li>
+<li><a href="#download-limonade">limonadeをダウンロードする</a></li>
+<li><a href="#file-position">ファイル構成</a></li>
+<li><a href="#do-well">動作確認</a></li>
+<li><a href="#move-and-set">ドキュメントルートの上に移動</a></li>
 </ul>
 
-<h2>limonadeをダウンロードする</h2>
+<h2><a name="download-limonade" id="download-limonade">limonadeをダウンロードする</a></h2>
 <p>
 最新版を<a href="http://github.com/sofadesign/limonade">sofadesign's limonade at master - GitHub</a>から持ってくる。<br />
 現在の開発サイクルが<br />
@@ -29,7 +29,7 @@ $ git checkout origin/0.4
 </code>
 </pre>
 </p>
-<h2>ファイル構成</h2>
+<h2><a name="file-position" id="file-position">ファイル構成</a></h2>
 <pre>
 <code>
 $ tree .
@@ -93,7 +93,7 @@ $ tree .
 16 directories, 39 files
 </code>
 </pre>
-<h2>動作確認</h2>
+<h2><a name="do-well" id="do-well">動作確認</a></h2>
 <p>
 webサーバからアクセスできるようにする
 </p>
@@ -106,7 +106,7 @@ example 01 Hello World!をクリック(http://limonade.localhost/examples/exampl
 ?/hello/sanematとパラメータを渡すと(http://limonade.localhost/examples/example01/?/hello/sanemat)<br />
 →Limonde first example Hello sanemat!<br />
 </p>
-<h2>ドキュメントルートの上に移動</h2>
+<h2><a name="move-and-set" id="move-and-set">ドキュメントルートの上に移動</a></h2>
 <p>
 必要なファイルはLICENSE, AUTHORS, lib/limonade.php だけなので、こんな感じに整理した。
 </p>
