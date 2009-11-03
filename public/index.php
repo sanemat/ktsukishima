@@ -19,18 +19,6 @@ function configure()
 function before()
 {
   require_once 'Net/UserAgent/Mobile.php';
-  if( Net_UserAgent_Mobile::factory()->isDoCoMo() ){
-    option('encoding', 'Shift_JIS');
-  }
-  elseif( Net_UserAgent_Mobile::factory()->isSoftBank() ){
-    option('encoding', 'UTF-8');
-  }
-  elseif( Net_UserAgent_Mobile::factory()->isEZweb() ){
-    option('encoding', 'Shift_JIS');
-  }
-  else{
-    option('encoding', 'UTF-8');
-  }
   
   require_once 'Text/Pictogram/Mobile.php';
   $picObject = Text_Pictogram_Mobile::factory( 'docomo', 'utf-8' );
@@ -68,7 +56,7 @@ function after_render_docomo($output)
   $output = str_replace( '%%%encoding%%%', 'Shift_JIS', $output );
   $output = str_replace( '%%%content_type%%%', $content_type, $output );
   option('content_type', 'application/xhtml+xml');
-
+  option('encoding', 'Shift_JIS');
   $output = mb_convert_encoding( $output, 'SJIS-WIN', 'UTF-8' );
 
   require_once 'HTML/CSS/Mobile.php';
@@ -91,7 +79,7 @@ function after_render_softbank($output)
   
   $output = str_replace( '%%%encoding%%%', 'UTF-8', $output );
   $output = str_replace( '%%%content_type%%%', $content_type, $output);
-
+  option('encoding', 'UTF-8');
   $emoji = Text_Pictogram_Mobile::factory( 'softbank', 'utf-8' );
   $output = $emoji->replace( $output );
   
@@ -105,7 +93,7 @@ function after_render_au($output)
   
   $output = str_replace( '%%%encoding%%%', 'Shift_JIS', $output );
   $output = str_replace( '%%%content_type%%%', $content_type, $output);
-  
+  option('encoding', 'Shift_JIS');
   $output = mb_convert_encoding( $output, 'SJIS-WIN', 'UTF-8' );
   
   $emoji = Text_Pictogram_Mobile::factory( 'au', 'sjis' );
@@ -121,7 +109,7 @@ function after_render_pc($output)
   
   $output = str_replace( '%%%encoding%%%', 'UTF-8', $output );
   $output = str_replace( '%%%content_type%%%', $content_type, $output);
-  
+  option('encoding', 'UTF-8');
   $emoji = Text_Pictogram_Mobile::factory( null, 'utf-8' );
   $output = $emoji->replace( $output );
   
