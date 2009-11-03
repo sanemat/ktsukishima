@@ -330,6 +330,7 @@ function run($env = null)
                                    // X-SENDFILE: for Apache and Lighttpd v. >= 1.5,
                                    // X-LIGHTTPD-SEND-FILE: for Apache and Lighttpd v. < 1.5
   option('content-type',       'text/html');
+
   # 1. Set error handling
   ini_set('display_errors', 1);
   set_error_handler('error_handler_dispatcher', E_ALL ^ E_NOTICE);
@@ -1361,7 +1362,7 @@ function render($content_or_func, $layout = '', $locals = array())
  */ 
 function html($content_or_func, $layout = '', $locals = array())
 {
-   $content_type = option('content_type');
+   $content_type = empty(option('content_type')) ? 'text/html' : option('content_type');
    if(!headers_sent()) header('Content-Type: '.$content_type.'; charset='.strtolower(option('encoding')));
    $args = func_get_args();
    return call_user_func_array('render', $args);
