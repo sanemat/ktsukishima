@@ -15,3 +15,7 @@
 <li>HTML_Common</li>
 <li>Text_Pictgram_Mobile</li>
 </ul>
+<p>
+githubのmasterと本サイトのコードはだいたい同期取れてますが完全一致ではないです。本サイトのリリース元はgithubでなくproject lockerです。<br />
+<a href="http://github.com/sanemat/ktsukishima">sanemat's ktsukishima at master - GitHub</a>
+</p>
