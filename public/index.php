@@ -19,7 +19,7 @@ function configure()
 function before()
 {
   require_once 'Net/UserAgent/Mobile.php';
-  option( 'agent', Net_UserAgent_Mobile::factory() );
+  Net_UserAgent_Mobile::factory();
   
   require_once 'Text/Pictogram/Mobile.php';
   $picObject = Text_Pictogram_Mobile::factory( 'docomo', 'utf-8' );
@@ -32,14 +32,14 @@ function before()
 # Setting code that will be executed after each controller function
 function after( $output )
 {
-  
-  if( option( 'agent' )->isDoCoMo() ){
+  require_once 'Net/UserAgent/Mobile.php';
+  if( Net_UserAgent_Mobile::factory()->isDoCoMo() ){
     $output = after_render_docomo( $output );
   }
-  elseif( option( 'agent' )->isSoftBank() ){
+  elseif( Net_UserAgent_Mobile::factory()->isSoftBank() ){
     $output = after_render_softbank( $output );
   }
-  elseif( option( 'agent' )->isEZweb() ){
+  elseif( Net_UserAgent_Mobile::factory()->isEZweb() ){
     $output = after_render_au( $output );
   }
   else{
