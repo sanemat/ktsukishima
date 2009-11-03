@@ -55,7 +55,7 @@
 /**
  * Limonade version
  */
-define('LIMONADE',              '0.4.4');
+define('LIMONADE',              '0.4.5');
 define('LIM_START_MICROTIME',   (float)substr(microtime(), 0, 10));
 define('LIM_SESSION_NAME',      'Fresh_and_Minty_Limonade_App');
 define('LIM_SESSION_FLASH_KEY', '_lim_flash_messages');
@@ -306,21 +306,21 @@ function run($env = null)
   if(is_null($env)) $env = env();
    
   # 0. Set default configuration
-  $root_dir = dirname(app_file());
-  $base_path = dirname($env['SERVER']['SCRIPT_NAME']);
+  $root_dir  = dirname(app_file());
+  $base_path = dirname(file_path($env['SERVER']['SCRIPT_NAME']));
   $base_file = basename($env['SERVER']['SCRIPT_NAME']);
-  $base_uri  = $base_path . '/'
-             . ($base_file == 'index.php') ? '?' : $base_file.'?';
+  $base_uri  = file_path($base_path, (($base_file == 'index.php') ? '?' : $base_file.'?'));
+  $lim_dir   = dirname(__FILE__);
   option('root_dir',           $root_dir);
   option('base_path',          $base_path);
   option('base_uri',           $base_uri); // set it manually if you use url_rewriting
-  option('limonade_dir',       dirname(__FILE__).'/');
-  option('limonade_views_dir', dirname(__FILE__).'/limonade/views/');
-  option('limonade_public_dir',dirname(__FILE__).'/limonade/public/');
-  option('public_dir',         $root_dir.'/public/');
-  option('views_dir',          $root_dir.'/views/');
-  option('controllers_dir',    $root_dir.'/controllers/');
-  option('lib_dir',            $root_dir.'/lib/');
+  option('limonade_dir',       file_path($lim_dir));
+  option('limonade_views_dir', file_path($lim_dir, 'limonade', 'views'));
+  option('limonade_public_dir',file_path($lim_dir, 'limonade', 'public'));
+  option('public_dir',         file_path($root_dir, 'public'));
+  option('views_dir',          file_path($root_dir, 'views'));
+  option('controllers_dir',    file_path($root_dir, 'controllers'));
+  option('lib_dir',            file_path($root_dir, 'lib'));
   option('error_views_dir',    option('limonade_views_dir'));
   option('env',                ENV_PRODUCTION);
   option('debug',              true);
@@ -450,15 +450,19 @@ function env($reset = null)
   
   if(empty($env))
   {
+    if(empty($GLOBALS['_SERVER']))
+    {
+      // Fixing empty $GLOBALS['_SERVER'] bug 
+      // http://sofadesign.lighthouseapp.com/projects/29612-limonade/tickets/29-env-is-empty
+      $GLOBALS['_SERVER']  =& $_SERVER;
+      $GLOBALS['_FILES']   =& $_FILES;
+      $GLOBALS['_REQUEST'] =& $_REQUEST;
+      $GLOBALS['_SESSION'] =& $_SESSION;
+      $GLOBALS['_ENV']     =& $_ENV;
+      $GLOBALS['_COOKIE']  =& $_COOKIE;
+    }
+    
     $glo_names = array('SERVER', 'FILES', 'REQUEST', 'SESSION', 'ENV', 'COOKIE');
-    if(!empty($_SERVER) && empty($_GLOBALS['_SERVER'])) $_GLOBALS['_SERVER'] =& $_SERVER;
-    if(!empty($_FILES) && empty($GLOBALS['_FILES'])) $_GLOBALS['_FILES'] =& $_FILES;
-    if(!empty($_REQUEST) && empty($GLOBALS['_REQUEST'])) $_GLOBALS['_REQUEST'] =& $_REQUEST;
-    if(!empty($_SESSION) && empty($GLOBALS['_SESSION'])) $_GLOBALS['_SESSION'] =& $_SESSION;
-    if(!empty($_ENV) && empty($GLOBALS['_ENV'])) $_GLOBALS['_ENV'] =& $_ENV;
-    if(!empty($_COOKIE) && empty($GLOBALS['_COOKIE'])) $_GLOBALS['_COOKIE'] =& $_COOKIE;
-    if(!empty($_GET) && empty($GLOBALS['_GET'])) $_GLOBALS['_GET'] =& $_GET;
-    if(!empty($_POST) && empty($GLOBALS['_POST'])) $_GLOBALS['_POST'] =& $_POST;
     
     $vars = array_merge($glo_names, request_methods());
     foreach($vars as $var)
@@ -502,7 +506,7 @@ function app_file()
     $stacktrace = array_pop(debug_backtrace());
     $file = $stacktrace['file'];
   }
-  return $file;
+  return file_path($file);
 }
 
 
@@ -1338,7 +1342,8 @@ function render($content_or_func, $layout = '', $locals = array())
 	}
 	else
 	{
-	  $content = vsprintf($content_or_func, $vars);
+	  if(substr_count($content_or_func, '%') !== count($vars)) $content = $content_or_func;
+    else $content = vsprintf($content_or_func, $vars);
 	}
 
 	if(empty($layout)) return $content;
@@ -1457,7 +1462,7 @@ function render_file($filename, $return = false)
   {
     $content_type = mime_type(file_extension($filename));
     $header = 'Content-type: '.$content_type;
-    if(file_is_text($filename)) $header .= 'charset='.strtolower(option('encoding'));
+    if(file_is_text($filename)) $header .= '; charset='.strtolower(option('encoding'));
     if(!headers_sent()) header($header);
     return file_read($filename, $return);
   }
@@ -1502,7 +1507,7 @@ function url_for($params = null)
     $p = explode('/',$param);
     foreach($p as $v)
     {
-      if(!empty($v)) $paths[] = rawurlencode($v);
+      if(!empty($v)) $paths[] = str_replace('%23', '#', rawurlencode($v));
     }
   }
   
@@ -1690,6 +1695,7 @@ function require_once_dir($path, $pattern = "*.php")
 {
   if($path[strlen($path) - 1] != "/") $path .= "/";
   $filenames = glob($path.$pattern);
+  if(!is_array($filenames)) $filenames = array();
   foreach($filenames as $filename) require_once $filename;
   return $filenames;
 }
@@ -2129,7 +2135,8 @@ function file_read_chunked($filename, $retbytes = true)
 }
 
 /**
- * Create a file path by concatenation of given arguments
+ * Create a file path by concatenation of given arguments.
+ * Windows paths with backslash directory separators are normalized in *nix paths.
  *
  * @param string $path, ... 
  * @return string normalized path
@@ -2137,8 +2144,10 @@ function file_read_chunked($filename, $retbytes = true)
 function file_path($path)
 {
   $args = func_get_args();
-  $ds = DIRECTORY_SEPARATOR;
+  $ds = '/'; 
+  $win_ds = '\\';
   $n_path = count($args) > 1 ? implode($ds, $args) : $path;
+  if(strpos($n_path, $win_ds) !== false) $n_path = str_replace( $win_ds, $ds, $n_path );
   $n_path = preg_replace( '/'.preg_quote($ds, $ds).'{2,}'.'/', 
                           $ds, 
                           $n_path);
