@@ -7,7 +7,7 @@
 </p>
 <ul>
 <li><a href="<?=url_for('download_limonade');?>">limonadeダウンロードからhello world</a></li>
-<li>PEAR</li>
+<li><a href="<?=url_for('download_pear');?>">PEAR</a></li>
 <li>Net_UserAgent_Mobile</li>
 <li>HTML_CSS</li>
 <li>HTML_CSS_Mobile</li>
