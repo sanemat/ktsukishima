@@ -40,11 +40,24 @@ PEAR                                 1.9.0/(1.9.0 stable)   1.4.9 PEAR Base Syst
 # pear upgrade --force pear
 
 //サーバに入ったPEAR.phpをコピー
-$ cp /usr/share/pear/PEAR.php venders/.
+$ cp /usr/share/pear/PEAR.php vender/.
 </code>
 </pre>
 </p>
-<p>vendors/PEAR.php に準備完了</p>
+<p>vendor/PEAR.php に準備完了</p>
+<p>
+limonadeの場合はconfigure()でpear置くところにpathを通しておく
+<pre>
+<code>
+function configure()
+{
+  option( 'root_dir', dirname( __FILE__ ) . '/..' );
+  option( 'vendor_dir', option( 'root_dir' ).'/vendor/' );
+  set_include_path( option( 'vendor_dir' ) . PATH_SEPARATOR . get_include_path() );
+}
+</code>
+</pre>
+</p>
 <p>
 <a href="<?=url_for('/');?>">how_to_start_limonadeに戻る</a>
 </p>
