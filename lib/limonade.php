@@ -417,9 +417,9 @@ function stop_and_exit($exit = true)
   {
     // If a Content-Type header exists, flash_sweep only if is text/html
     // Else if there's no Content-Type header, flash_sweep by default
-    if(stripos($header, 'Content-Type:') === 0)
+    if(stripos($header, 'Content-Type:') === false)
     {
-      $flash_sweep = stripos($header, 'Content-Type: text/html') === 0;
+      $flash_sweep = stripos($header, 'Content-Type: text/html') === false;
       break;
     }
   }
